@@ -27,6 +27,7 @@ let gameStarted = false;
 let particles = [];
 let lastTrailTime = 0;
 let trailFrequency = 100; // Create trail particle every 100ms
+let isMobile = false; // Flag to track if we're on mobile
 
 // Initialize clouds
 function initClouds() {
@@ -91,6 +92,7 @@ function playSound(type) {
     audio.play();
 }
 
+// Handle various input methods for better mobile support
 document.addEventListener('keydown', function(e) {
     if (e.code === 'Space') {
         if (!gameStarted) {
@@ -101,6 +103,18 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// Touch events for mobile
+gameContainer.addEventListener('touchstart', function(e) {
+    if (!gameStarted) {
+        startGame();
+    } else {
+        handleJump(e);
+    }
+    // Prevent scrolling when touching the game
+    e.preventDefault();
+});
+
+// Click events (works for both desktop and mobile)
 gameContainer.addEventListener('click', function(e) {
     if (!gameStarted) {
         startGame();
@@ -110,11 +124,25 @@ gameContainer.addEventListener('click', function(e) {
 });
 
 restartBtn.addEventListener('click', restartGame);
+restartBtn.addEventListener('touchstart', function(e) {
+    restartGame();
+    e.preventDefault();
+});
+
 startBtn.addEventListener('click', startGame);
+startBtn.addEventListener('touchstart', function(e) {
+    startGame();
+    e.preventDefault();
+});
 
 function handleJump(e) {
     if (!gameRunning || (e.type === 'keydown' && e.code !== 'Space')) return;
-    birdVelocity = jumpForce;
+    // Adjust jump force for mobile - make it slightly stronger
+    if (isMobile) {
+        birdVelocity = jumpForce * 1.1; // Slightly stronger jump on mobile
+    } else {
+        birdVelocity = jumpForce;
+    }
     playSound('flap');
     createJumpParticles();
 }
@@ -272,6 +300,10 @@ function startGame() {
     birdVelocity = 0;
     pipes = [];
     gameSpeed = 1.5;
+    
+    // Adjust pipe gap, frequency and gravity based on device
+    checkDeviceType();
+    
     scoreElement.textContent = score;
     gameOverElement.style.display = 'none';
     document.querySelectorAll('.pipe').forEach(p => p.remove());
@@ -304,7 +336,10 @@ function gameLoop() {
 }
 
 function updateBird() {
-    birdVelocity += gravity;
+    // Get current gravity based on device type
+    const currentGravity = isMobile ? 0.3 : 0.5; // Reduced gravity on mobile
+    
+    birdVelocity += currentGravity;
     birdPosition += birdVelocity;
     bird.style.top = birdPosition + 'px';
     
@@ -318,7 +353,12 @@ function createPipe() {
     const pipeBottom = document.createElement('div');
     pipeTop.className = 'pipe pipe-top';
     pipeBottom.className = 'pipe pipe-bottom';
-    const gapPosition = Math.random() * 200 + 100;
+    
+    // Adjust gap position for easier gameplay on mobile
+    const minGapPosition = isMobile ? 120 : 100; // Higher min position for mobile
+    const gapPositionRange = isMobile ? 150 : 200; // Less variation for mobile
+    
+    const gapPosition = Math.random() * gapPositionRange + minGapPosition;
     pipeTop.style.height = gapPosition + 'px';
     pipeBottom.style.height = (400 - gapPosition - pipeGap) + 'px';
     pipeTop.style.right = '0px';
@@ -330,7 +370,11 @@ function createPipe() {
 
 function updatePipes() {
     const currentTime = Date.now();
-    if (currentTime - lastPipeTime > pipeFrequency) {
+    // Check if it's time to create a new pipe
+    // Use different frequencies for mobile/desktop
+    const currentPipeFrequency = isMobile ? 2000 : 1500; // More space between pipes on mobile
+    
+    if (currentTime - lastPipeTime > currentPipeFrequency) {
         createPipe();
         lastPipeTime = currentTime;
     }
@@ -361,6 +405,14 @@ function updatePipes() {
 
 function checkCollisions() {
     const birdRect = bird.getBoundingClientRect();
+    
+    // Check if bird hits the ceiling (top of game container)
+    if (birdPosition <= 0) {
+        endGame();
+        return;
+    }
+    
+    // Check if bird hits pipes or ground
     for (const pipe of pipes) {
         const topRect = pipe.top.getBoundingClientRect();
         const bottomRect = pipe.bottom.getBoundingClientRect();
@@ -370,6 +422,7 @@ function checkCollisions() {
             birdPosition + bird.offsetHeight >= ground.offsetTop
         ) {
             endGame();
+            return;
         }
     }
 }
@@ -405,5 +458,60 @@ function endGame() {
     playSound('hit');
 }
 
-// Initialize the clouds when the page loads
-window.addEventListener('load', initClouds);
+// Check if the user is on a mobile device
+function checkDeviceType() {
+    isMobile = window.innerWidth <= 768;
+    
+    // Adjust game parameters for mobile
+    if (isMobile) {
+        pipeGap = 180; // Wider gap between pipes for mobile
+        jumpForce = -9; // Slightly weaker jump (smoother on mobile)
+        // gravity is adjusted in updateBird function
+    } else {
+        pipeGap = 150;
+        jumpForce = -10;
+    }
+}
+
+// Handle window resize for responsive gameplay
+window.addEventListener('resize', function() {
+    // Adjust game container size for mobile if needed
+    adjustForMobile();
+    checkDeviceType();
+});
+
+// Function to adjust game for mobile devices
+function adjustForMobile() {
+    // Check if we're on a mobile device
+    isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // Make game container fit the screen better
+        gameContainer.style.width = '100%';
+        gameContainer.style.height = '85vh';
+        gameContainer.style.maxWidth = '400px';
+        gameContainer.style.maxHeight = '600px';
+        
+        // Adjust controls for easier tapping
+        startBtn.style.padding = '20px 40px';
+        restartBtn.style.padding = '20px 40px';
+    } else {
+        // Reset to default for desktop
+        gameContainer.style.width = '400px';
+        gameContainer.style.height = '600px';
+        startBtn.style.padding = '15px 30px';
+        restartBtn.style.padding = '12px 25px';
+    }
+}
+
+// Run mobile adjustments on load
+window.addEventListener('load', function() {
+    initClouds();
+    adjustForMobile();
+    checkDeviceType();
+});
+
+// Prevent default touch actions on the game container to avoid scrolling
+gameContainer.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+}, { passive: false });
