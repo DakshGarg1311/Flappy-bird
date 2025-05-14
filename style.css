@@ -1,0 +1,239 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #000;
+    font-family: 'Press Start 2P', cursive;
+    overflow: hidden;
+    image-rendering: pixelated;
+}
+
+#game-container {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    overflow: hidden;
+    border: 4px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    background: #4C97FF; /* Classic pixel game sky blue */
+    image-rendering: pixelated;
+}
+
+#bird {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 50px;
+    top: 300px;
+    z-index: 10;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="2" y="5" width="2" height="2" fill="%23000"/><rect x="4" y="3" width="6" height="2" fill="%23000"/><rect x="10" y="5" width="2" height="2" fill="%23000"/><rect x="2" y="7" width="12" height="4" fill="%23FFD700"/><rect x="4" y="11" width="8" height="2" fill="%23FFD700"/><rect x="6" y="3" width="4" height="4" fill="%23FFA500"/><rect x="8" y="5" width="2" height="2" fill="%23FFF"/></svg>');
+    background-size: contain;
+    image-rendering: pixelated;
+    transition: transform 0.1s ease;
+}
+
+.pipe {
+    position: absolute;
+    width: 70px;
+    right: -70px;
+    z-index: 5;
+    background-repeat: repeat-y;
+    image-rendering: pixelated;
+}
+
+.pipe-top {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23148F14"/><rect x="0" y="14" width="16" height="2" fill="%230A560A"/><rect x="0" y="0" width="16" height="2" fill="%2320D620"/><rect x="1" y="1" width="14" height="14" fill="%2348B848"/><rect x="3" y="3" width="10" height="10" fill="%233A9A3A"/><rect x="2" y="0" width="2" height="16" fill="%2320D620"/><rect x="12" y="0" width="2" height="16" fill="%230A560A"/></svg>');
+    background-size: 70px 70px;
+    top: 0;
+    transform-origin: bottom center;
+}
+
+.pipe-bottom {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect width="16" height="16" fill="%23148F14"/><rect x="0" y="0" width="16" height="2" fill="%2320D620"/><rect x="0" y="14" width="16" height="2" fill="%230A560A"/><rect x="1" y="1" width="14" height="14" fill="%2348B848"/><rect x="3" y="3" width="10" height="10" fill="%233A9A3A"/><rect x="2" y="0" width="2" height="16" fill="%2320D620"/><rect x="12" y="0" width="2" height="16" fill="%230A560A"/></svg>');
+    background-size: 70px 70px;
+    bottom: 100px;
+    transform-origin: top center;
+}
+
+#score {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    z-index: 100;
+}
+
+#game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 30px;
+    border: 4px solid #FFD700;
+    text-align: center;
+    display: none;
+    z-index: 200;
+    image-rendering: pixelated;
+}
+
+#game-over h2 {
+    color: #FFD700;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#final-score {
+    color: #FFD700;
+    font-size: 28px;
+}
+
+.button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    background: #00AA00;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px #000;
+    box-shadow: 4px 4px 0 #006600;
+    transition: all 0.1s;
+    image-rendering: pixelated;
+}
+
+.button:hover {
+    background: #00BB00;
+}
+
+.button:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+
+#ground {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 8;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect width="16" height="16" fill="%238B4513"/><rect x="0" y="0" width="4" height="4" fill="%23A05A2C"/><rect x="4" y="0" width="4" height="4" fill="%238B4513"/><rect x="8" y="0" width="4" height="4" fill="%23A05A2C"/><rect x="12" y="0" width="4" height="4" fill="%238B4513"/><rect x="0" y="4" width="4" height="4" fill="%238B4513"/><rect x="4" y="4" width="4" height="4" fill="%23A05A2C"/><rect x="8" y="4" width="4" height="4" fill="%238B4513"/><rect x="12" y="4" width="4" height="4" fill="%23A05A2C"/><rect x="0" y="8" width="4" height="4" fill="%23A05A2C"/><rect x="4" y="8" width="4" height="4" fill="%238B4513"/><rect x="8" y="8" width="4" height="4" fill="%23A05A2C"/><rect x="12" y="8" width="4" height="4" fill="%238B4513"/><rect x="0" y="12" width="4" height="4" fill="%238B4513"/><rect x="4" y="12" width="4" height="4" fill="%23A05A2C"/><rect x="8" y="12" width="4" height="4" fill="%238B4513"/><rect x="12" y="12" width="4" height="4" fill="%23A05A2C"/></svg>');
+    background-size: 80px 80px;
+    image-rendering: pixelated;
+}
+
+#clouds {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.cloud {
+    position: absolute;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="8" viewBox="0 0 16 8"><rect x="2" y="3" width="12" height="4" fill="white"/><rect x="4" y="2" width="8" height="1" fill="white"/><rect x="6" y="1" width="4" height="1" fill="white"/><rect x="1" y="4" width="1" height="2" fill="white"/><rect x="14" y="4" width="1" height="2" fill="white"/></svg>');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+}
+
+#start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+}
+
+#start-title {
+    color: #FFD700;
+    font-size: 32px;
+    margin-bottom: 30px;
+    text-shadow: 3px 3px 0 #000;
+    animation: pulse 1.5s infinite;
+}
+
+#start-btn {
+    padding: 15px 30px;
+    background: #FF0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px #000;
+    box-shadow: 4px 4px 0 #990000;
+    transition: all 0.1s;
+    image-rendering: pixelated;
+}
+
+#start-btn:hover {
+    background: #FF3333;
+}
+
+#start-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+#instructions {
+    color: white;
+    font-size: 12px;
+    margin-top: 30px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: gold;
+    z-index: 20;
+    opacity: 0.8;
+    image-rendering: pixelated;
+}
+
+.trail-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 215, 0, 0.6);
+    z-index: 9;
+    image-rendering: pixelated;
+}
+
+.death-particle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 20;
+    image-rendering: pixelated;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixelated Flappy Bird</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="clouds"></div>
+    <div id="score">0</div>
+    <div id="bird"></div>
+    <div id="ground"></div>
+    <div id="start-screen">
+      <h1 id="start-title">FLAPPY BIRD</h1>
+      <button id="start-btn">START GAME</button>
+      <div id="instructions">
+        Press SPACE or CLICK to flap wings<br>
+        Press SPACE to start game<br>
+        Avoid the pipes<br>
+        Each pair of pipes = 1 point
+      </div>
+    </div>
+    <div id="game-over">
+      <h2>GAME OVER</h2>
+      <p>YOUR SCORE: <span id="final-score">0</span></p>
+      <button id="restart-btn">PLAY AGAIN</button>
+    </div>
+  </div>
+<script src="script.js"></script>
+</body>
+</html>
