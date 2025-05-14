@@ -12,6 +12,7 @@ body {
     font-family: 'Press Start 2P', cursive;
     overflow: hidden;
     image-rendering: pixelated;
+    touch-action: manipulation; /* Disable browser handling of all touch gestures */
 }
 
 #game-container {
@@ -99,7 +100,7 @@ body {
     font-size: 28px;
 }
 
-.button {
+button {
     margin-top: 25px;
     padding: 12px 25px;
     background: #00AA00;
@@ -112,17 +113,21 @@ body {
     box-shadow: 4px 4px 0 #006600;
     transition: all 0.1s;
     image-rendering: pixelated;
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
 
-.button:hover {
+button:hover {
     background: #00BB00;
 }
 
-.button:active {
+button:active {
     transform: translate(4px, 4px);
     box-shadow: none;
 }
 
+#restart-btn, #start-btn {
+    min-width: 180px; /* Wider buttons for easier tapping on mobile */
+}
 
 #ground {
     position: absolute;
@@ -236,4 +241,55 @@ body {
     pointer-events: none;
     z-index: 20;
     image-rendering: pixelated;
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+    body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    #game-container {
+        width: 100%;
+        max-width: 400px;
+        height: 80vh;
+        max-height: 600px;
+        border-radius: 0;
+    }
+    
+    #start-title {
+        font-size: 24px;
+    }
+    
+    #instructions {
+        font-size: 10px;
+        padding: 0 10px;
+    }
+    
+    #start-btn, #restart-btn {
+        padding: 20px 40px;
+        font-size: 14px;
+        min-width: 200px;
+    }
+    
+    #score {
+        font-size: 24px;
+    }
+    
+    #game-over {
+        width: 80%;
+        padding: 20px;
+    }
+    
+    #game-over h2 {
+        font-size: 20px;
+    }
+    
+    #final-score {
+        font-size: 24px;
+    }
 }
